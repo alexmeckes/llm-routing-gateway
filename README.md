@@ -1,14 +1,40 @@
-# otari gateway
+# LLM Routing Gateway
 
-[![Tests](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-tests.yml/badge.svg)](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-tests.yml)
-[![Lint](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-lint.yml/badge.svg)](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-lint.yml)
-[![Typecheck](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-typecheck.yml/badge.svg)](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-typecheck.yml)
-[![Docker](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-docker.yml/badge.svg)](https://github.com/mozilla-ai/gateway/actions/workflows/gateway-docker.yml)
+[![Tests](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-tests.yml/badge.svg)](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-tests.yml)
+[![Lint](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-lint.yml/badge.svg)](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-lint.yml)
+[![Typecheck](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-typecheck.yml/badge.svg)](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-typecheck.yml)
+[![Docker](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-docker.yml/badge.svg)](https://github.com/alexmeckes/llm-routing-gateway/actions/workflows/gateway-docker.yml)
 ![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)
 
-OpenAI-compatible LLM gateway with API key management, budget enforcement, and usage tracking.
+Self-hosted LLM routing control plane built on top of Otari Gateway and AnyLLM.
+It keeps Otari's OpenAI-compatible provider gateway foundation, then adds
+database-backed routing policies, project/tag attribution, route traces,
+operator controls, and governance workflows.
 
 </div>
+
+## Relationship to Otari core
+
+Otari core is the gateway foundation: OpenAI-compatible endpoints, AnyLLM
+provider dispatch, direct `provider:model` calls, local keys/users/budgets,
+usage and pricing records, platform mode, and built-in tools.
+
+This project preserves that foundation and adds a self-hosted control plane for
+operator-managed routing:
+
+| Area | Otari core | This project |
+|------|------------|--------------|
+| Model selection | Caller chooses a concrete `provider:model` | Caller can use `default_routing`; the gateway resolves the provider/model from policy |
+| Policy management | Static provider config and direct request parameters | Database-backed routing policies with lifecycle, revisions, rollback, and canary rollout |
+| Tenant control | Users, keys, and budgets | Projects, tags, project/tag budgets, and policy selection by project or tag conditions |
+| Routing signals | Direct dispatch through AnyLLM | Cost, latency, quality/eval scores, passive provider health, region constraints, fallback chains |
+| Observability | Usage logs and pricing records | Route traces, dry-run routing, endpoint-aware summaries, served model/vendor metadata |
+| Governance | Request auth and budget checks | Policy guardrails, redaction, prompt-injection checks, context trimming/summarization |
+| Operations | API docs and core gateway endpoints | Self-hosted `/admin` dashboard plus routing demos and capability docs |
+
+In short: Otari core is the multi-provider gateway runtime; this project turns
+that runtime into a policy-driven routing gateway operators can manage without a
+hosted control plane.
 
 ## Why gateway?
 

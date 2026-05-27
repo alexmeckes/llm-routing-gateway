@@ -10,6 +10,22 @@ model catalogs, usage attribution, and route traces inside their own database.
 It is an Apache-2.0, self-hosted control plane foundation for production LLM
 routing, cost controls, observability, and governance workflows.
 
+## Relationship to Otari Core
+
+Otari core provides the runtime foundation: OpenAI-compatible request handling,
+AnyLLM provider dispatch, direct `provider:model` calls, local auth, usage,
+pricing, budget checks, platform mode, and built-in tools. This project keeps
+those capabilities and adds the control-plane layer around them.
+
+| Layer | Otari core responsibility | Added here |
+|-------|---------------------------|------------|
+| Runtime | Accept OpenAI-compatible requests and call providers through AnyLLM | Resolve `default_routing` requests to a concrete provider/model before dispatch |
+| Configuration | Read local provider credentials and gateway configuration | Store routing policies, projects, route traces, budget alerts, and policy revisions in the database |
+| Routing | Dispatch the model requested by the caller | Route by cost, latency, quality/eval score, passive health, fallback order, region, project, and tags |
+| Observability | Record usage and pricing | Explain routing decisions through dry-runs, route traces, summaries, and served model/vendor metadata |
+| Governance | Enforce auth, rate limits, and budget checks | Add policy guardrails, redaction, prompt-injection checks, context compression, and rollout controls |
+| Operations | Expose API docs and health endpoints | Provide a self-hosted `/admin` dashboard and runnable routing demo |
+
 ## Operator Mental Model
 
 ```mermaid
