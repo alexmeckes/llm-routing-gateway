@@ -74,7 +74,7 @@ def inject_purpose_hints(
 
 
 def _accumulate_tool_call_deltas(slots: dict[int, dict[str, Any]], deltas: list[Any]) -> None:
-    """Merge incremental streaming tool_call deltas into per-index slots."""
+    """Accumulate incremental streaming tool_call deltas into per-index slots."""
     for delta in deltas:
         idx = delta.index
         slot = slots.setdefault(idx, {"id": None, "type": "function", "function": {"name": "", "arguments": ""}})
@@ -157,15 +157,15 @@ async def mcp_tool_loop_stream(
     """
     messages = list(completion_kwargs.get("messages") or [])
     user_tools = list(completion_kwargs.get("tools") or [])
-    merged_tools = user_tools + pool.openai_tools
+    combined_tools = user_tools + pool.openai_tools
 
     base = {k: v for k, v in completion_kwargs.items() if k not in {"messages", "tools"}}
     base["stream"] = True
 
     for _ in range(max_iterations):
         kwargs: dict[str, Any] = {**base, "messages": messages}
-        if merged_tools:
-            kwargs["tools"] = merged_tools
+        if combined_tools:
+            kwargs["tools"] = combined_tools
 
         stream: AsyncIterator[ChatCompletionChunk] = await acompletion(**kwargs)  # type: ignore[assignment]
         slots: dict[int, dict[str, Any]] = {}
@@ -235,7 +235,7 @@ async def mcp_tool_loop(
     """
     messages = list(completion_kwargs.get("messages") or [])
     user_tools = list(completion_kwargs.get("tools") or [])
-    merged_tools = user_tools + pool.openai_tools
+    combined_tools = user_tools + pool.openai_tools
 
     base = {k: v for k, v in completion_kwargs.items() if k not in {"messages", "tools", "stream"}}
 
@@ -245,8 +245,8 @@ async def mcp_tool_loop(
 
     for _ in range(max_iterations):
         kwargs: dict[str, Any] = {**base, "messages": messages, "stream": False}
-        if merged_tools:
-            kwargs["tools"] = merged_tools
+        if combined_tools:
+            kwargs["tools"] = combined_tools
 
         completion: ChatCompletion = await acompletion(**kwargs)  # type: ignore[assignment]
         if not first_response_signaled:

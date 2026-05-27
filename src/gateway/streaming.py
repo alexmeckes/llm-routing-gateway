@@ -59,8 +59,8 @@ ANTHROPIC_STREAM_FORMAT = StreamFormat(
 )
 
 
-def _merge_usage(current: CompletionUsage, update: CompletionUsage) -> CompletionUsage:
-    """Merge usage data, keeping the last non-zero value for each field."""
+def _combine_usage(current: CompletionUsage, update: CompletionUsage) -> CompletionUsage:
+    """Combine usage data, keeping the last non-zero value for each field."""
     return CompletionUsage(
         prompt_tokens=update.prompt_tokens or current.prompt_tokens,
         completion_tokens=update.completion_tokens or current.completion_tokens,
@@ -96,7 +96,7 @@ async def streaming_generator(
         async for chunk in stream:
             chunk_usage = extract_usage(chunk)
             if chunk_usage:
-                usage = _merge_usage(usage, chunk_usage)
+                usage = _combine_usage(usage, chunk_usage)
                 has_usage = True
             yield format_chunk(chunk)
         yield fmt.done_marker
