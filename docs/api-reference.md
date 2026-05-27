@@ -190,9 +190,10 @@ Tag-scoped budget example:
 
 ### Routing
 
-The standalone gateway includes a self-hosted operator dashboard at `/admin`. The page is not part of the OpenAPI
+The standalone gateway includes a packaged operator frontend at `/admin`. The page is not part of the OpenAPI
 schema; it uses the configured master key in the browser to call the same management APIs for routing policies,
-projects, route traces, usage summaries, budget alerts, and policy revision rollback.
+projects, dry-run route resolution, route traces, usage summaries, budgets, budget alerts, and policy revision
+rollback.
 
 Omit `model`, set it to `null`, or set it to `default_routing` on `POST /v1/chat/completions`,
 `POST /v1/responses`, or `POST /v1/routing/resolve` to resolve a request through the default routing policy or through

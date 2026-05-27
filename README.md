@@ -30,7 +30,7 @@ operator-managed routing:
 | Routing signals | Direct dispatch through AnyLLM | Cost, latency, quality/eval scores, passive provider health, region constraints, fallback chains |
 | Observability | Usage logs and pricing records | Route traces, dry-run routing, endpoint-aware summaries, served model/vendor metadata |
 | Governance | Request auth and budget checks | Policy guardrails, redaction, prompt-injection checks, context trimming/summarization |
-| Operations | API docs and core gateway endpoints | Self-hosted `/admin` dashboard plus routing demos and capability docs |
+| Operations | API docs and core gateway endpoints | Packaged `/admin` operator frontend plus routing demos and capability docs |
 
 In short: Otari core is the multi-provider gateway runtime; this project turns
 that runtime into a policy-driven routing gateway operators can manage without a
@@ -61,7 +61,7 @@ hosted control plane.
 - Responses include the canonical served model and execution vendor
 - Dry-run route resolution (`/v1/routing/resolve`) and endpoint-aware route traces for inspecting policy decisions
 - Project/tag-attributed usage logs and summary rollups for billing and analytics exports
-- Self-hosted operator admin dashboard at `/admin` for policies, traces, usage, budget alerts, and revision rollback
+- Packaged operator frontend at `/admin` for policies, projects, dry-run routing, traces, usage, budgets, alerts, and revision rollback
 - Local routing gateway walkthrough in [`demo/routing-gateway`](demo/routing-gateway)
 - Routing gateway capability map in [`docs/routing-gateway-capabilities.md`](docs/routing-gateway-capabilities.md)
 - Health and metrics endpoints (`/health`, optional `/metrics`) including request, token, cost, budget, alert webhook, retry, and dead-letter counters

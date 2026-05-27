@@ -24,7 +24,7 @@ those capabilities and adds the control-plane layer around them.
 | Routing | Dispatch the model requested by the caller | Route by cost, latency, quality/eval score, passive health, fallback order, region, project, and tags |
 | Observability | Record usage and pricing | Explain routing decisions through dry-runs, route traces, summaries, and served model/vendor metadata |
 | Governance | Enforce auth, rate limits, and budget checks | Add policy guardrails, redaction, prompt-injection checks, context compression, and rollout controls |
-| Operations | Expose API docs and health endpoints | Provide a self-hosted `/admin` dashboard and runnable routing demo |
+| Operations | Expose API docs and health endpoints | Provide a packaged `/admin` operator frontend and runnable routing demo |
 
 ## Operator Mental Model
 
@@ -66,7 +66,7 @@ usage logs and route traces for billing, analytics, and debugging.
 | Build-your-own benchmark router | `weighted_score` combines configured or uploaded benchmark/quality scores, estimated cost, and recent latency with transparent score components; `scripts/apply_eval_scores.py` normalizes generated eval artifacts into policy updates | Implemented |
 | Data-loss prevention and prompt-injection protection | Policy-level `guardrails` can block, observe, or redact routed requests using reusable managed OSS presets, configured terms/patterns, built-in PII patterns, prompt-injection phrases, credential-leak patterns, and external HTTP classifier services | Implemented |
 | Context compression | Policy-level `context` policies can trim older turns or replace them with deterministic extractive summaries while preserving system/developer prompts plus newest turns before provider dispatch | Implemented |
-| Operator dashboard and billing exports | Self-hosted `/admin` dashboard covers routing policies, revision rollback, route traces, usage summaries, and budget alerts; hosted billing consolidation remains out of scope | Partial |
+| Operator frontend and billing exports | Packaged `/admin` frontend covers routing policies, projects, dry-run routing, revision rollback, route traces, usage summaries, budgets, and alerts; hosted billing consolidation remains out of scope | Partial |
 
 ## Core Request Shapes
 
@@ -237,7 +237,7 @@ Use this list to review the branch against the intended control-plane behavior.
 | Dry-run and traces | `/v1/routing/resolve`, `/v1/route-traces`, `/v1/route-traces/summary` |
 | Usage export and analytics | `/v1/usage`, `/v1/usage/summary` |
 | Model/vendor catalog | `/v1/models?format=gateway`, `/v1/vendors` |
-| Admin dashboard | `/admin`, plus the management APIs it calls |
+| Operator frontend | `/admin`, plus the management APIs it calls |
 | Demo | `demo/routing-gateway/README.md` and `demo/routing-gateway/demo_flow.sh` |
 
 ## Validation
