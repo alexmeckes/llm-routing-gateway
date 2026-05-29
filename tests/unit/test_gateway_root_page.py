@@ -41,6 +41,7 @@ def test_admin_dashboard_page_is_available(tmp_path: Path) -> None:
     assert "LLM Routing Gateway Admin" in response.text
     assert "/admin/assets/styles.css" in response.text
     assert "/admin/assets/app.js" in response.text
+    assert 'type="module"' in response.text
     assert 'data-view="policies"' in response.text
 
 
@@ -55,15 +56,22 @@ def test_admin_dashboard_assets_are_available(tmp_path: Path) -> None:
 
     with TestClient(app) as client:
         css_response = client.get("/admin/assets/styles.css")
-        js_response = client.get("/admin/assets/app.js")
+        js_responses = {
+            asset: client.get(f"/admin/assets/{asset}")
+            for asset in ("api.js", "app.js", "dom.js", "format.js", "modal.js", "render.js")
+        }
+        missing_response = client.get("/admin/assets/missing.js")
 
     assert css_response.status_code == 200
     assert "text/css" in css_response.headers["content-type"]
     assert ".app-shell" in css_response.text
-    assert js_response.status_code == 200
-    assert "text/javascript" in js_response.headers["content-type"]
-    assert "/v1/routing-policies" in js_response.text
-    assert "/v1/route-traces/summary" in js_response.text
-    assert "/v1/usage/summary" in js_response.text
-    assert "/v1/budgets/alerts" in js_response.text
-    assert "Otari-Key" in js_response.text
+    assert missing_response.status_code == 404
+    for js_response in js_responses.values():
+        assert js_response.status_code == 200
+        assert "text/javascript" in js_response.headers["content-type"]
+    assert "/v1/routing-policies" in js_responses["app.js"].text
+    assert "/v1/route-traces/summary" in js_responses["app.js"].text
+    assert "/v1/usage/summary" in js_responses["app.js"].text
+    assert "/v1/budgets/alerts" in js_responses["app.js"].text
+    assert "Otari-Key" in js_responses["api.js"].text
+    assert "renderOverview" in js_responses["render.js"].text

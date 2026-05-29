@@ -11,6 +11,11 @@ router = APIRouter(tags=["admin"])
 _ASSET_MEDIA_TYPES = {
     "styles.css": "text/css; charset=utf-8",
     "app.js": "text/javascript; charset=utf-8",
+    "api.js": "text/javascript; charset=utf-8",
+    "dom.js": "text/javascript; charset=utf-8",
+    "format.js": "text/javascript; charset=utf-8",
+    "modal.js": "text/javascript; charset=utf-8",
+    "render.js": "text/javascript; charset=utf-8",
 }
 
 
